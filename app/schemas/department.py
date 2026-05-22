@@ -1,10 +1,12 @@
-from datetime import date, datetime
-from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field
+from app.schemas.employee import EmployeeRead
 
 
 class DepartmentCreate(BaseModel):
     name: str
-    parent_id: int | None
+    parent_id: int | None = None
+
 
 class DepartmentRead(BaseModel):
     id: int
@@ -14,27 +16,14 @@ class DepartmentRead(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class DepartmentUpdate(BaseModel):
-    name: str | None
-    parent_id: int | None
+    name: str | None = None
+    parent_id: int | None = None
 
-class EmployeeCreate(BaseModel):
-    full_name: str
-    position: str
-    hired_at: date | None = None
-
-class EmployeeRead(BaseModel):
-    id: int
-    department_id: int
-    full_name: str
-    position: str
-    hired_at: date | None
-    created_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
 
 class DepartmentDetail(DepartmentRead):
-    employees: list[EmployeeRead] = []
-    children: list["DepartmentDetail"] = []
+    employees: list[EmployeeRead] = Field(default_factory=list)
+    children: list["DepartmentDetail"] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
