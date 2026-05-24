@@ -68,9 +68,35 @@ async def get_department(
 async def update_department(
     dept_id: int, data: DepartmentUpdate, session: AsyncSession
 ):
-    dept = await department_repo.get_by_id(dept_id, session)
-    if dept is None:
+    department = await department_repo.get_by_id(dept_id, session)
+    if department is None:
         raise DepartmentNotFound()
-    if data.parent_id == dept_id:
-        raise DepartmentCycleError()
-    
+    if data.parent_id is not None:
+        if data.parent_id == dept_id:
+            raise DepartmentCycleError()
+        new_parent = await department_repo.get_by_id(data.parent_id, session)
+        if new_parent is None:
+            raise DepartmentNotFound()
+        current = new_parent
+        while current is not None:
+            if current.id == dept_id:
+                raise DepartmentCycleError()
+            current = await department_repo.get_by_id(current.parent_id, session)
+    return await department_repo.update(department, data, session)
+
+async def delete_department(dept_id: int, mode: str, session: AsyncSession, reassign_to_id: int | None = None) -> None:
+    department = await department_repo.get_by_id(dept_id, session)
+    if department is None:
+        raise DepartmentNotFound()
+    if mode == "reassign":
+        if reassign_to_id is None:
+            raise ValueError("reassign_to_id обязателен")
+        target = await department_repo.get_by_id(reassign_to_id, session)
+        if target is None:
+            raise DepartmentNotFound()
+        await employee_repo.reassign(dept_id, reassign_to_id, session)
+        await department_repo.delete(department, session)
+    elif mode == "cascade":
+        return await department_repo.delete(department, session)
+
+
