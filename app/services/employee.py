@@ -5,9 +5,12 @@ from app.repositories import employee as employee_repo
 from app.schemas.employee import EmployeeCreate
 
 
-
-async def create_employee(dept_id: int, employee: EmployeeCreate, session: AsyncSession):
+async def create_employee(
+    dept_id: int, employee: EmployeeCreate, session: AsyncSession
+):
     department = await department_repo.get_by_id(dept_id=dept_id, session=session)
     if not department:
         raise DepartmentNotFound()
-    return await employee_repo.create(department_id=dept_id, employee=employee, session=session)
+    return await employee_repo.create(
+        department_id=dept_id, employee=employee, session=session
+    )

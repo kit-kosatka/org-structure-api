@@ -36,9 +36,7 @@ async def create(department: DepartmentCreate, session: AsyncSession) -> Departm
 
 
 async def update(
-    department: Department,
-    data: DepartmentUpdate,
-    session: AsyncSession
+    department: Department, data: DepartmentUpdate, session: AsyncSession
 ) -> Department:
     data_dict = data.model_dump(exclude_unset=True)
     for field, value in data_dict.items():
@@ -47,7 +45,7 @@ async def update(
     await session.refresh(department)
     return department
 
+
 async def delete(department: Department, session: AsyncSession) -> None:
     await session.delete(department)
     await session.commit()
-

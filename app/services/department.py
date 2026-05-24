@@ -84,7 +84,10 @@ async def update_department(
             current = await department_repo.get_by_id(current.parent_id, session)
     return await department_repo.update(department, data, session)
 
-async def delete_department(dept_id: int, mode: str, session: AsyncSession, reassign_to_id: int | None = None) -> None:
+
+async def delete_department(
+    dept_id: int, mode: str, session: AsyncSession, reassign_to_id: int | None = None
+) -> None:
     department = await department_repo.get_by_id(dept_id, session)
     if department is None:
         raise DepartmentNotFound()
@@ -98,5 +101,3 @@ async def delete_department(dept_id: int, mode: str, session: AsyncSession, reas
         await department_repo.delete(department, session)
     elif mode == "cascade":
         return await department_repo.delete(department, session)
-
-

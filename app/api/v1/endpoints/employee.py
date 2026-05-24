@@ -7,8 +7,11 @@ from app.services.department import DepartmentNotFound
 
 router = APIRouter(prefix="/departments", tags=["employees"])
 
+
 @router.post("/{dept_id}/employees/", response_model=EmployeeRead)
-async def create_employee(dept_id: int, employee: EmployeeCreate, session: AsyncSession = Depends(get_db)):
+async def create_employee(
+    dept_id: int, employee: EmployeeCreate, session: AsyncSession = Depends(get_db)
+):
     try:
         return await employee_service.create_employee(dept_id, employee, session)
     except DepartmentNotFound:
