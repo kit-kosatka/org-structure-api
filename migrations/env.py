@@ -1,7 +1,8 @@
 from logging.config import fileConfig
 from app.core.config import settings
 from app.db.base import Base
-from app.models.department import Department, Employee
+from app.models.department import Department
+from app.models.employee import Employee
 import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine
 
