@@ -37,10 +37,11 @@ async def get_department(
     db: AsyncSession = Depends(get_db),
     depth: int = 1,
     include_employees: bool = True,
+    sort_by: str = "created_at",
 ):
     try:
         return await department_service.get_department(
-            dept_id, db, depth, include_employees
+            dept_id, db, depth, include_employees, sort_by
         )
     except DepartmentNotFound:
         raise HTTPException(status_code=404, detail="Department not found")

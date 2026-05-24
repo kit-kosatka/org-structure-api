@@ -33,7 +33,11 @@ async def create_department(
 
 
 async def get_department(
-    dept_id: int, session: AsyncSession, depth: int = 1, include_employees: bool = True
+    dept_id: int,
+    session: AsyncSession,
+    depth: int = 1,
+    include_employees: bool = True,
+    sort_by: str = "created_at",
 ) -> DepartmentDetail:
     depth = min(depth, 5)
     department = await department_repo.get_by_id(dept_id=dept_id, session=session)
@@ -41,7 +45,9 @@ async def get_department(
         raise DepartmentNotFound()
     employees = []
     if include_employees:
-        employees = await employee_repo.get_by_department_id(dept_id, session)
+        employees = await employee_repo.get_by_department_id(
+            dept_id, session, sort_by=sort_by
+        )
     children = []
     if depth > 0:
         children_departments = await department_repo.get_children(
@@ -53,6 +59,7 @@ async def get_department(
                 session=session,
                 depth=depth - 1,
                 include_employees=include_employees,
+                sort_by=sort_by,
             )
             children.append(child_detail)
     return DepartmentDetail(

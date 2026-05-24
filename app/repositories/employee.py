@@ -2,13 +2,17 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.employee import Employee
 from app.schemas.employee import EmployeeCreate
+from sqlalchemy import select, update, asc
 
 
 async def get_by_department_id(
-    department_id: int, session: AsyncSession
+    department_id: int, session: AsyncSession, sort_by: str = "created_at"
 ) -> list[Employee]:
+    order = Employee.full_name if sort_by == "full_name" else Employee.created_at
     result = await session.execute(
-        select(Employee).where(Employee.department_id == department_id)
+        select(Employee)
+        .where(Employee.department_id == department_id)
+        .order_by(asc(order))
     )
     return result.scalars().all()
 
