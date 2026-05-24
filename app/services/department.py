@@ -21,7 +21,7 @@ async def create_department(
     department: DepartmentCreate, session: AsyncSession
 ) -> Department:
     if department.parent_id is not None:
-        parent = await department_repo.get_by_id(session, department.parent_id)
+        parent = await department_repo.get_by_id(department.parent_id, session)
         if parent is None:
             raise DepartmentNotFound()
     existing = await department_repo.get_by_name_and_parent(
@@ -45,7 +45,7 @@ async def get_department(
     children = []
     if depth > 0:
         children_departments = await department_repo.get_children(
-            dept_id=dept_id, session=session
+            parent_id=dept_id, session=session
         )
         for child in children_departments:
             child_detail = await get_department(
