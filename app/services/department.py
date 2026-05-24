@@ -74,7 +74,7 @@ async def get_department(
 
 async def update_department(
     dept_id: int, data: DepartmentUpdate, session: AsyncSession
-):
+) -> Department:
     department = await department_repo.get_by_id(dept_id, session)
     if department is None:
         raise DepartmentNotFound()

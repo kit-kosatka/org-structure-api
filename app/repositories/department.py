@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.models.department import Department
-from app.schemas.department import DepartmentCreate, DepartmentUpdate, DepartmentDetail
+from app.schemas.department import DepartmentCreate, DepartmentUpdate
 
 
 async def get_by_id(dept_id: int, session: AsyncSession) -> Department | None:

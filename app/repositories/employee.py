@@ -1,4 +1,3 @@
-from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.employee import Employee
 from app.schemas.employee import EmployeeCreate
