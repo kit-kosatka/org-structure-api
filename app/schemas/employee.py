@@ -7,6 +7,7 @@ class EmployeeCreate(BaseModel):
     position: str
     hired_at: date | None = None
 
+
 class EmployeeRead(BaseModel):
     id: int
     department_id: int

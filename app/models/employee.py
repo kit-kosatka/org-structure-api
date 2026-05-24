@@ -4,13 +4,18 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime, date
 
 
-
 class Employee(Base):
-    __tablename__ = 'employees'
+    __tablename__ = "employees"
     id: Mapped[int] = mapped_column(primary_key=True)
-    department_id: Mapped[int] = mapped_column(ForeignKey('departments.id', ondelete='CASCADE'), nullable=False)
+    department_id: Mapped[int] = mapped_column(
+        ForeignKey("departments.id", ondelete="CASCADE"), nullable=False
+    )
     full_name: Mapped[str] = mapped_column(String(200), nullable=False)
     position: Mapped[str] = mapped_column(String(200), nullable=False)
     hired_at: Mapped[date | None] = mapped_column(nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    department: Mapped["Department"] = relationship("Department", back_populates="employees")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    department: Mapped["Department"] = relationship(
+        "Department", back_populates="employees"
+    )
